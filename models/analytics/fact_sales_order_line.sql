@@ -16,14 +16,14 @@ fact_sales_order_line__cast_type AS (
 )
 
 SELECT
-  sales_order_line_key,
+  fact_line.sales_order_line_key,
   fact_header.sales_order_key,
-  product_key,
+  fact_line.product_key,
   fact_header.customer_key,
-  quantity,
-  unit_price,
-  gross_amount
-FROM fact_sales_order_line__cast_type 
-/*LEFT JOIN `vit-lam-data.wide_world_importers_dwh_staging.stg_fact_sales_order` AS fact_header*/
-LEFT JOIN `dbt-data-warehouse-442608.ecentric_kietnguyen_learndbt_staging.stg_fact_sales_order` AS fact_header
-ON fact_sales_order_line__cast_type.sales_order_key = fact_header.sales_order_key
+  fact_line.quantity,
+  fact_line.unit_price,
+  fact_line.gross_amount
+FROM fact_sales_order_line__cast_type AS fact_line
+/*LEFT JOIN `dbt-data-warehouse-442608.ecentric_kietnguyen_learndbt_staging.stg_fact_sales_order`*/
+LEFT JOIN {{ref('stg_fact_sales_order')}} AS fact_header
+ON fact_line.sales_order_key = fact_header.sales_order_key
